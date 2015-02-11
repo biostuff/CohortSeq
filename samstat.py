@@ -13,6 +13,17 @@ import sh
 import os
 import fnmatch
 
+#sequences = "/media/wolfthomas/BackupData/PipelineTest/Input/"
+#folder = True
+#samstatlocation = "/home/wolfthomas/NGSTools/samstat-1.5/src/samstat"
+
+#getsamstat(sequences = sequences,folder = True,ncores = 15,samstatlocation = samstatlocation)
+
+def samstatReturn(bamstat,samstatlocation): 
+        samstat = sh.Command(samstatlocation)
+        samstat(bamstat)
+        return(bamstat)
+
 
 
 
@@ -21,6 +32,8 @@ import fnmatch
 @click.option('--folder',is_flag=True,help='Should all bams in a folder, as specified by --sequences, be statted.')
 @click.option('--ncores',default=1,help='How many cores should be used if ? (Maximum one core for each bam file)')
 @click.option('--samstatlocation',default="samstat",help='Where is samstat located ?')
+
+
 
     
 def getsamstat (sequences,folder,ncores,samstatlocation): 
@@ -40,14 +53,8 @@ def getsamstat (sequences,folder,ncores,samstatlocation):
     else:
         bamsToStat = sequences
 
-    #define a samstat python function using sh
-    samstat = sh.Command(samstatlocation)
 
-    #define a samstat function that returns the filename of the bam that was statted
-    #def samstatReturn(bamstat): 
-    #    samstat(bamstat)
-    #    return(bamstat)
-
+    
 
     if isinstance(bamsToStat,list) == False:
         bamsToStat = [bamsToStat]
@@ -56,9 +63,9 @@ def getsamstat (sequences,folder,ncores,samstatlocation):
     #try instead of a loop    
     if ncores < 2:    
         for i in range(len(bamsToStat)):
-            samstat(bamsToStat[i])
+            samstatReturn(bamsToStat[i],samstatlocation)
     else:
-        Parallel(n_jobs=ncores)(delayed(samstat)(i) for i in bamsToStat)
+        Parallel(n_jobs=ncores)(delayed(samstatReturn)(i,samstatlocation) for i in bamsToStat)
 
         
 #generate the samstat output   
