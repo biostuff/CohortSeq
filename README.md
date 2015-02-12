@@ -1,5 +1,5 @@
 # CohortSeq
-##A Toolbox for panel sequencing
+## A Toolbox for panel sequencing
 
 ##install requirements (besides 'pip'):
 
